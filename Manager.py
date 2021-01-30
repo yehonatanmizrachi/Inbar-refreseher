@@ -16,6 +16,7 @@ class Manager:
         self.canvas = tk.Canvas(self.window)
         self.canvas.pack()
         self.font = "Purisa"
+        self.button_bg = "LightBlue2"
         # Audio
         self.audio = None
         # User

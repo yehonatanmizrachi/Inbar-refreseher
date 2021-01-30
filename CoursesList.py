@@ -37,7 +37,7 @@ def start_courses_list(manager):
     msg_frame = tk.Frame(manager.window, bg=manager.window_bg, bd=5)
     msg_frame.place(anchor='n', relx=0.5, rely=0.02, relwidth=0.9, relheight=0.15)
     # msg
-    msg_label = tk.Label(msg_frame, text="Connected successfully!\nAdd the courses that you would like to refresh"
+    msg_label = tk.Label(msg_frame, text="Connected successfully!\nAdd the courses code with the group number!"
                          , bg=manager.window_bg, font=10)
     msg_label.place(relwidth=1, relheight=1)
 
@@ -45,7 +45,7 @@ def start_courses_list(manager):
     courses_frame = tk.Frame(manager.window, bg=manager.window_bg, bd=5)
     courses_frame.place(anchor='n', relx=0.5, rely=0.15, relwidth=0.9, relheight=0.1)
     # course name label
-    course_name_label = tk.Label(courses_frame, text="Course name:", bg=manager.window_bg, font=70)
+    course_name_label = tk.Label(courses_frame, text="Course code:", bg=manager.window_bg, font=70)
     course_name_label.place(anchor='n', relx=0.15, relwidth=0.3, relheight=1)
     # course name entry
     course_name_entry = tk.Entry(courses_frame, font=40)
@@ -62,11 +62,11 @@ def start_courses_list(manager):
     courses_list_label.place(relx=0.1, rely=0.15, relwidth=0.5, relheight=0.8)
 
     # add course button
-    add_course_button = tk.Button(courses_frame, text="Add", font='40',
+    add_course_button = tk.Button(courses_frame, text="Add", font='40', bg=manager.button_bg,
                                   command=lambda: add_course(course_name_entry.get(), lower_frame, course_name_entry))
     add_course_button.place(relx=0.83, rely=0, relwidth=0.15, relheight=1)
 
     # continue button
-    continue_button = tk.Button(lower_frame, text="Continue", font='70',
+    continue_button = tk.Button(lower_frame, text="Continue", font='70', bg=manager.button_bg,
                                 command=lambda: start_refreshing())
     continue_button.place(relx=0.63, rely=0.15, relwidth=0.3, relheight=0.8)

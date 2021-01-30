@@ -11,7 +11,7 @@ HEIGHT = 300
 WIDTH = 400
 TITLE = "Auto Refresher refresher"
 # Refresher
-MAX_DAYS_DELTA = 10
+MAX_DAYS_DELTA = 5
 INTERNET_CONNECTION_ERR_SLEEP_TIME = 10
 # HTML parser
 COURSE_NAME_HTML_INDEX = 0
@@ -37,6 +37,21 @@ def convert_str_to_date(str_date):
     return datetime.date(year, month, day)
 
 
+# for MOADY BET
+def is_grade_new(manager, course_name):
+    today = datetime.date.today()
+
+    manager.browser.open("https://inbar.biu.ac.il/Live/Main.aspx")
+    page_html = manager.browser.parsed
+    grade_block = page_html.find_all("div", {"id": "ContentPlaceHolder1_dvStudentGradesList"})[0]
+    for course_html in grade_block.find_all("tr"):
+        name_str = course_html.find_all("td")[COURSE_NAME_HTML_INDEX].text
+        date_str = course_html.find_all("td")[COURSE_DATE_HTML_INDEX].text
+        if name_str == course_name:
+            delta_time = today - convert_str_to_date(date_str)
+            return int(delta_time.days) < MAX_DAYS_DELTA
+
+
 # entry point
 def start_refresher(manager):
     global refresh_count
@@ -60,7 +75,7 @@ def start_refresher(manager):
     msg = tk.StringVar()
     update_label = tk.Label(frame, textvariable=msg, bg=manager.window_bg, font=200, fg='green')
     update_label.place(anchor='n', relx=0.5, rely=0.7, relwidth=1, relheight=0.2)
-    msg.set("You can go sleep (∪.∪ )...zzz\n we will take it from here 💪")
+    msg.set("You can go back to netflix \n we will take it from here (☞ﾟヮﾟ)☞")
 
     def check_for_grades():
         # open page
@@ -69,38 +84,80 @@ def start_refresher(manager):
         login_form['edtUsername'] = manager.user.username
         login_form['edtPassword'] = manager.user.password
         manager.browser.submit_form(login_form)
+        # open grades page
+        manager.browser.open("https://inbar.biu.ac.il/live/StudentGradesList.aspx")
 
-        today = datetime.date.today()
         page_html = manager.browser.parsed
-        grade_block = page_html.find_all("div", {"id": "ContentPlaceHolder1_dvStudentGradesList"})
-        for course_html in grade_block[0].find_all("tr"):
-            name_str = course_html.find_all("td")[COURSE_NAME_HTML_INDEX].text
-            date_str = course_html.find_all("td")[COURSE_DATE_HTML_INDEX].text
-            grade_str = course_html.find_all("td")[COURSE_GRADE_HTML_INDEX].text
-            if manager.user.courses_list.count(name_str) != 0:
-                # TODAY minus the upload date of the new grade
-                delta_time = today - convert_str_to_date(date_str)
-                if int(delta_time.days) < MAX_DAYS_DELTA:
-                    msg.set("A new grade uploaded: " + name_str + "\ngrade: " + grade_str)
-                    return True
-        return False
+        courses = page_html.find_all("tr", {"id": "ContentPlaceHolder1_gvGradesList"})
+        for course in courses:
+            course_index = course.contents[1].contents[1].attrs['id'][45:]
+            course_code_id = "ContentPlaceHolder1_gvGradesList_lblUserCode_" + course_index
+            course_code = course.find_all("span", {"id": course_code_id})[0].text
+            for user_course_code in manager.user.courses_list:
+                if course_code in user_course_code or user_course_code in course_code:
+                    course_grade_id = "ContentPlaceHolder1_gvGradesList_lblRowFinalGrade_" + course_index
+                    grade = course.find_all("span", {"id": course_grade_id})[0].text
+                    if grade != '':
+                        course_name = course.contents[2].contents[0]
+                        if is_grade_new(manager, course_name):
+                            return course_name, grade
+        return "None", "None"
 
     def refresh():
         global refresh_count
         # refresh
         try:
             # checks for new grade
-            if check_for_grades():
-                manager.start_audio("win")
+            the_name, the_grade = check_for_grades()
+            if the_grade != "None" or the_name != "None":
+                frame.destroy()
+                new_grade(manager, the_name, the_grade)
             else:
                 refresh_count += 1
                 count_str.set("Attempt count: " + str(refresh_count))
                 manager.window.after(frequency, refresh)
         # in case there is no internet connection
         except exceptions.ConnectionError:
-            pass
-            # print("There is no internet connection. Try to connect automatically in "
-            #       + str(INTERNET_CONNECTION_ERR_SLEEP_TIME) + " sec")
-            # root3.after(int(INTERNET_CONNECTION_ERR_SLEEP_TIME * 1000), start_refresh)
+            frame.destroy()
+            connection_error(manager)
 
-    manager.window.after(0, refresh)
+    manager.window.after(frequency, refresh)
+
+
+def new_grade(manager, name, grade):
+    manager.init_window(WIDTH + 50, HEIGHT, "New grade!")
+
+    frame = tk.Frame(manager.window, bg=manager.window_bg, bd=10)
+    frame.place(relwidth=1, relheight=1)
+
+    # label
+    label = tk.Label(frame, text=f"New grade uploaded:\n{name}\n\ngrade: {grade}", bg=manager.window_bg, font=70, fg="green")
+    label.place(anchor='n', relx=0.5, rely=0, relwidth=1, relheight=0.4)
+    # exit button
+    exit_button = tk.Button(frame, text="Exit", font='40', bg=manager.button_bg, command=exit)
+    exit_button.place(anchor='n', relx=0.5, rely=0.5, relwidth=0.8, relheight=0.4)
+
+    def start_audio():
+        manager.start_audio("win")
+        manager.window.after(10000, manager.start_audio("win"))
+
+    manager.start_audio("win")
+    manager.window.after(10000, start_audio)
+
+
+def connection_error(manager):
+    manager.init_window(WIDTH, HEIGHT, "Connection error")
+
+    def resume():
+        frame.destroy()
+        start_refresher(manager)
+
+    frame = tk.Frame(manager.window, bg=manager.window_bg, bd=10)
+    frame.place(relwidth=1, relheight=1)
+    # error label
+    error_label = tk.Label(frame, text="There is no internet connection (⊙_⊙;)\n Check you connection and try again"
+                           , bg=manager.window_bg, font=70, fg="red")
+    error_label.place(anchor='n', relx=0.5, rely=0, relwidth=1, relheight=0.3)
+    # resume button
+    resume_button = tk.Button(frame, text="Resume", font='40', bg=manager.button_bg, command=lambda: resume())
+    resume_button.place(anchor='n', relx=0.5, rely=0.4, relwidth=0.8, relheight=0.5)

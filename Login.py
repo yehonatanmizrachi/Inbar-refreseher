@@ -60,7 +60,7 @@ def start_login(manager):
     password_entry.place(anchor='w', relx=0.4, rely=0.6, relwidth=0.5, relheight=0.1)
     # submit button
     submit_button = tk.Button(submit_frame, text="Submit", font='40',
-                              command=lambda: try_login(id_entry.get(), password_entry.get()))
+                              command=lambda: try_login(id_entry.get(), password_entry.get()), bg=manager.button_bg)
     submit_button.place(anchor='n', relx=0.5, rely=0.8, relwidth=0.3, relheight=0.1)
 
     # start the application
