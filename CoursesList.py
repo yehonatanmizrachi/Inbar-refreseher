@@ -1,4 +1,5 @@
 import tkinter as tk
+from Refresher import start_refresher
 
 HEIGHT = 400
 WIDTH = 500
@@ -24,14 +25,14 @@ def start_courses_list(manager):
             label = tk.Label(msg_frame, text="No courses were chosen", bg=manager.window_bg, fg='red', font=70)
             label.place(relwidth=1, relheight=1)
             return
+        # start refresher
         msg_frame.destroy()
         courses_frame.destroy()
         lower_frame.destroy()
-        # start_refresh_gui(user_name, password, input_courses_list)
 
-    print(manager.user.username, manager.user.password)
+        start_refresher(manager)
+
     manager.init_window(WIDTH, HEIGHT, TITLE)
-
     # msg frame
     msg_frame = tk.Frame(manager.window, bg=manager.window_bg, bd=5)
     msg_frame.place(anchor='n', relx=0.5, rely=0.02, relwidth=0.9, relheight=0.15)
