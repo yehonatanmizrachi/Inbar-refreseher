@@ -18,6 +18,8 @@ class Manager:
         self.font = "Purisa"
         # Audio
         self.audio = None
+        # User
+        self.user = None
 
     def init_window(self, width, height, title):
         self.window.title(title)

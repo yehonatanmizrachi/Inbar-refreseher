@@ -1,6 +1,7 @@
 from requests import exceptions
 import tkinter as tk
 from User import User
+from CoursesList import start_courses_list
 
 HEIGHT = 350
 WIDTH = 420
@@ -26,12 +27,9 @@ def start_login(manager):
                 return
 
             # connected successfully
-            user = User(user_name, password)
-            # input_label = tk.Label(submit_frame, text="Connected successfully!",
-            #                        bg=manager.window_bg, fg='green', font=75)
-            # input_label.place(anchor='n', relx=0.5, rely=0.15, relwidth=1, relheight=0.2)
+            manager.user = User(user_name, password)
             submit_frame.destroy()
-            # start_input_gui(input_user_name, input_password)
+            start_courses_list(manager)
 
         except exceptions.ConnectionError:
             input_label = tk.Label(submit_frame, text="There is no internet connection\n Please connect and try again",
