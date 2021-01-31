@@ -1,4 +1,4 @@
-Inbar AutoRefresher 3.0 - Bar Ilan university
+# Inbar AutoRefresher 3.0 - Bar Ilan university #
 
 Refresh the Inbar for you, and alarm when a new grade is uploaded.
 
