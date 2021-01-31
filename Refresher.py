@@ -3,11 +3,12 @@ from requests import exceptions
 import threading
 import time
 import datetime
+import sys
 
 # GUI
 HEIGHT = 300
 WIDTH = 400
-TITLE = "Auto Refresher refresher"
+TITLE = "Auto Refresher Refreshing"
 # Refresher
 MAX_DAYS_DELTA = 5
 INTERNET_CONNECTION_ERR_SLEEP_TIME = 10
@@ -128,7 +129,7 @@ def start_refresher(manager):
 
 
 def new_grade(manager, name, grade):
-    manager.init_window(WIDTH + 50, HEIGHT, "New grade!")
+    manager.init_window(WIDTH + 50, HEIGHT, "New Grade!")
 
     frame = tk.Frame(manager.window, bg=manager.window_bg, bd=10)
     frame.place(relwidth=1, relheight=1)
@@ -137,7 +138,7 @@ def new_grade(manager, name, grade):
     label = tk.Label(frame, text=f"New grade uploaded:\n{name}\n\ngrade: {grade}", bg=manager.window_bg, font=70, fg="green")
     label.place(anchor='n', relx=0.5, rely=0, relwidth=1, relheight=0.4)
     # exit button
-    exit_button = tk.Button(frame, text="Exit", font='40', bg=manager.button_bg, command=exit)
+    exit_button = tk.Button(frame, text="Exit", font='40', bg=manager.button_bg, command=sys.exit)
     exit_button.place(anchor='n', relx=0.5, rely=0.5, relwidth=0.8, relheight=0.4)
 
     def audio_mainloop():
@@ -151,7 +152,7 @@ def new_grade(manager, name, grade):
 
 
 def connection_error(manager):
-    manager.init_window(WIDTH, HEIGHT, "Connection error")
+    manager.init_window(WIDTH, HEIGHT, "Connection Error")
 
     def resume():
         frame.destroy()

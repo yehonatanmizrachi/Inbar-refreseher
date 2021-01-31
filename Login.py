@@ -5,7 +5,7 @@ from CoursesList import start_courses_list
 
 HEIGHT = 350
 WIDTH = 420
-TITLE = "Auto Refresher login"
+TITLE = "Auto Refresher Login"
 
 
 def start_login(manager):

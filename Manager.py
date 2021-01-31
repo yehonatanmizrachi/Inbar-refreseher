@@ -14,7 +14,7 @@ class Manager:
         self.icon = tk.PhotoImage(file="./Photos/icon.png")
         self.window.iconphoto(False, self.icon)
         self.window.resizable(False, False)
-        self.canvas = tk.Canvas(self.window)
+        self.canvas = tk.Canvas(self.window, bg="PaleTurquoise1")
         self.canvas.pack()
         self.font = "Purisa"
         self.button_bg = "LightBlue2"

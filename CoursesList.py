@@ -3,7 +3,7 @@ from Refresher import start_refresher
 
 HEIGHT = 400
 WIDTH = 500
-TITLE = "Auto Refresher courses list"
+TITLE = "Auto Refresher Courses List"
 
 
 def start_courses_list(manager):
@@ -35,7 +35,7 @@ def start_courses_list(manager):
     manager.init_window(WIDTH, HEIGHT, TITLE)
     # msg frame
     msg_frame = tk.Frame(manager.window, bg=manager.window_bg, bd=5)
-    msg_frame.place(anchor='n', relx=0.5, rely=0.02, relwidth=0.9, relheight=0.15)
+    msg_frame.place(anchor='n', relx=0.5, rely=0.02, relwidth=0.95, relheight=0.15)
     # msg
     msg_label = tk.Label(msg_frame, text="Connected successfully!\nAdd the courses code with the group number!"
                          , bg=manager.window_bg, font=10)
@@ -43,7 +43,7 @@ def start_courses_list(manager):
 
     # courses input frame
     courses_frame = tk.Frame(manager.window, bg=manager.window_bg, bd=5)
-    courses_frame.place(anchor='n', relx=0.5, rely=0.15, relwidth=0.9, relheight=0.1)
+    courses_frame.place(anchor='n', relx=0.5, rely=0.15, relwidth=0.95, relheight=0.1)
     # course name label
     course_name_label = tk.Label(courses_frame, text="Course code:", bg=manager.window_bg, font=70)
     course_name_label.place(anchor='n', relx=0.15, relwidth=0.3, relheight=1)
@@ -52,7 +52,7 @@ def start_courses_list(manager):
     course_name_entry.place(relx=0.3, rely=0.1, relwidth=0.5, relheight=0.8)
     # courses list frame
     lower_frame = tk.Frame(manager.window, bg=manager.window_bg, bd=5)
-    lower_frame.place(anchor='n', relx=0.5, rely=0.28, relwidth=0.9, relheight=0.7)
+    lower_frame.place(anchor='n', relx=0.5, rely=0.28, relwidth=0.95, relheight=0.7)
     # courses list headline label
     courses_list_headline_label = tk.Label(lower_frame, text="Courses list:", bg=manager.window_bg, font=40)
     courses_list_headline_label.place(relx=-0.013, rely=-0.45, relwidth=0.3, relheight=1)
