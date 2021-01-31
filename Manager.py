@@ -7,6 +7,7 @@ class Manager:
     def __init__(self):
         # Browser
         self.browser = RoboBrowser(history=True, parser="html.parser")
+        self.refresh_thread = None
         # GUI - tkinter
         self.window = tk.Tk()
         self.window_bg = '#80c1ff'

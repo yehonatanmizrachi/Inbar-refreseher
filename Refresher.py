@@ -1,17 +1,15 @@
 import tkinter as tk
-from robobrowser import RoboBrowser
 from requests import exceptions
+import threading
 import time
-import winsound
 import datetime
-import smtplib
 
 # GUI
 HEIGHT = 300
 WIDTH = 400
 TITLE = "Auto Refresher refresher"
 # Refresher
-MAX_DAYS_DELTA = 5
+MAX_DAYS_DELTA = 100
 INTERNET_CONNECTION_ERR_SLEEP_TIME = 10
 # HTML parser
 COURSE_NAME_HTML_INDEX = 0
@@ -55,7 +53,6 @@ def is_grade_new(manager, course_name):
 # entry point
 def start_refresher(manager):
     global refresh_count
-    frequency = int((1 / manager.user.frequency) * 60 * 60 * 1000)
 
     manager.init_window(WIDTH, HEIGHT, TITLE)
 
@@ -115,13 +112,19 @@ def start_refresher(manager):
             else:
                 refresh_count += 1
                 count_str.set("Attempt count: " + str(refresh_count))
-                manager.window.after(frequency, refresh)
         # in case there is no internet connection
         except exceptions.ConnectionError:
             frame.destroy()
             connection_error(manager)
 
-    manager.window.after(frequency, refresh)
+    def refresh_mainloop():
+        while True:
+            refresh()
+            time.sleep(1 / manager.user.frequency * 60 * 60)
+
+    manager.refresh_thread = threading.Thread(target=refresh_mainloop, args=())
+    manager.refresh_thread.daemon = True
+    manager.refresh_thread.start()
 
 
 def new_grade(manager, name, grade):
@@ -137,12 +140,14 @@ def new_grade(manager, name, grade):
     exit_button = tk.Button(frame, text="Exit", font='40', bg=manager.button_bg, command=exit)
     exit_button.place(anchor='n', relx=0.5, rely=0.5, relwidth=0.8, relheight=0.4)
 
-    def start_audio():
-        manager.start_audio("win")
-        manager.window.after(10000, manager.start_audio("win"))
+    def audio_mainloop():
+        while True:
+            manager.start_audio("win")
+            time.sleep(5)
 
-    manager.start_audio("win")
-    manager.window.after(10000, start_audio)
+    thread = threading.Thread(target=audio_mainloop, args=())
+    thread.daemon = True
+    thread.start()
 
 
 def connection_error(manager):
@@ -155,7 +160,7 @@ def connection_error(manager):
     frame = tk.Frame(manager.window, bg=manager.window_bg, bd=10)
     frame.place(relwidth=1, relheight=1)
     # error label
-    error_label = tk.Label(frame, text="There is no internet connection (⊙_⊙;)\n Check you connection and try again"
+    error_label = tk.Label(frame, text="There is no internet connection (⊙_⊙;)\nCheck your connection and try again"
                            , bg=manager.window_bg, font=70, fg="red")
     error_label.place(anchor='n', relx=0.5, rely=0, relwidth=1, relheight=0.3)
     # resume button
