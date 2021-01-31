@@ -1,6 +1,6 @@
 # Inbar AutoRefresher 3.0 - Bar Ilan university #
 
-Refresh the Inbar for you, and alarm when a new grade is uploaded.
+## Refresh the Inbar for you, and alarm when a new grade is uploaded. ##
 
 Firstly, connect to your account using the Inbar username and password.
 
