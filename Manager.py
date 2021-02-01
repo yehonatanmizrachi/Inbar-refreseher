@@ -6,7 +6,7 @@ from robobrowser import RoboBrowser
 class Manager:
     def __init__(self):
         # Browser
-        self.browser = RoboBrowser(history=True, parser="html.parser")
+        self.browser = RoboBrowser(history=False, parser="html.parser")
         self.refresh_thread = None
         # GUI - tkinter
         self.window = tk.Tk()

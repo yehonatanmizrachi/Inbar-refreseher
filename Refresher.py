@@ -99,6 +99,10 @@ def start_refresher(manager):
                         course_name = course.contents[2].contents[0]
                         if is_grade_new(manager, course_name):
                             return course_name, grade
+                        del course_name
+                    del course_grade_id, grade
+            del course_index, course_code_id, course_code
+        del login_form, page_html, courses
         return "None", "None"
 
     def refresh():
@@ -113,6 +117,7 @@ def start_refresher(manager):
             else:
                 refresh_count += 1
                 count_str.set("Attempt count: " + str(refresh_count))
+                del the_name, the_grade
         # in case there is no internet connection
         except exceptions.ConnectionError:
             frame.destroy()
