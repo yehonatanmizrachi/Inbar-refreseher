@@ -33,7 +33,9 @@ def convert_str_to_date(str_date):
     else:
         month = int(str_date[4:5])
     year = int(str_date[6:])
-    return datetime.date(year, month, day)
+    date = datetime.date(year, month, day)
+    del day, month, year
+    return date
 
 
 # for MOADY BET
@@ -48,7 +50,11 @@ def is_grade_new(manager, course_name):
         date_str = course_html.find_all("td")[COURSE_DATE_HTML_INDEX].text
         if name_str == course_name:
             delta_time = today - convert_str_to_date(date_str)
+            del today, page_html, grade_block, name_str, date_str
             return int(delta_time.days) < MAX_DAYS_DELTA
+        del name_str, date_str
+
+    del today, page_html, grade_block
 
 
 # entry point
@@ -161,6 +167,7 @@ def connection_error(manager):
 
     def resume():
         frame.destroy()
+        del frame, error_label, resume_button
         start_refresher(manager)
 
     frame = tk.Frame(manager.window, bg=manager.window_bg, bd=10)
