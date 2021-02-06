@@ -167,7 +167,7 @@ def connection_error(manager):
 
     def resume():
         frame.destroy()
-        del frame, error_label, resume_button
+        # del frame, error_label, resume_button
         start_refresher(manager)
 
     frame = tk.Frame(manager.window, bg=manager.window_bg, bd=10)
