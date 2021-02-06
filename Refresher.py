@@ -177,5 +177,5 @@ def connection_error(manager):
                            , bg=manager.window_bg, font=70, fg="red")
     error_label.place(anchor='n', relx=0.5, rely=0, relwidth=1, relheight=0.3)
     # resume button
-    resume_button = tk.Button(frame, text="Resume", font='40', bg=manager.button_bg, command=lambda: resume())
+    resume_button = tk.Button(frame, text="Resume", font='40', bg=manager.button_bg, command=lambda: resume)
     resume_button.place(anchor='n', relx=0.5, rely=0.4, relwidth=0.8, relheight=0.5)
